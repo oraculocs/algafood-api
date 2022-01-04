@@ -34,14 +34,16 @@ public class EstadoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Estado> buscar(@PathVariable Long id){
-		Estado estado = cadastroEstadoService.buscar(id);
+	public Estado buscar(@PathVariable Long id){
 		
-		if(estado != null) {
-			return ResponseEntity.ok(estado);
-		}
+		return cadastroEstadoService.buscarOuFalhar(id);
+		//Estado estado = cadastroEstadoService.buscar(id);
 		
-		return ResponseEntity.notFound().build();
+//		if(estado != null) {
+//			return ResponseEntity.ok(estado);
+//		}
+//		
+//		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -51,31 +53,36 @@ public class EstadoController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long id, @RequestBody Estado estado){
-		Estado estadoAtual = cadastroEstadoService.buscar(id);
+	public Estado atualizar(@PathVariable Long id, @RequestBody Estado estado){
 		
-		if(estadoAtual != null) {
+		Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(id);
+		//Estado estadoAtual = cadastroEstadoService.buscar(id);
+		
+//		if(estadoAtual != null) {
 			BeanUtils.copyProperties(estado, estadoAtual, "id");
-			cadastroEstadoService.salvar(estadoAtual);
-		
-			return ResponseEntity.ok(estadoAtual);
-		}
-		
-		return ResponseEntity.notFound().build();
+			
+			return cadastroEstadoService.salvar(estadoAtual);
+//			cadastroEstadoService.salvar(estadoAtual);
+//		
+//			return ResponseEntity.ok(estadoAtual);
+//		}
+//		
+//		return ResponseEntity.notFound().build();
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id){
-		try {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long id){
+		//try {
 			cadastroEstadoService.excluir(id);
 			
-			return ResponseEntity.noContent().build();
-		}catch(EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
-		}
+			//return ResponseEntity.noContent().build();
+//		}catch(EntidadeNaoEncontradaException e) {
+//			return ResponseEntity.notFound().build();
+//		}catch (EntidadeEmUsoException e) {
+//			return ResponseEntity.status(HttpStatus.CONFLICT)
+//					.body(e.getMessage());
+//		}
 	}
 
 }

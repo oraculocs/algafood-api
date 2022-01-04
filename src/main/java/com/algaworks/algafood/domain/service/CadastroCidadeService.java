@@ -10,14 +10,21 @@ import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cidade;
+import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 
 @Service
 public class CadastroCidadeService {
 	
+	private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
+	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de Cidade com código %d";
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private CadastroEstadoService cadastroEstadoService;
 	
 	
 	public List<Cidade> listar(){
@@ -32,19 +39,24 @@ public class CadastroCidadeService {
 	}
 	
 	public Cidade salvar(Cidade cidade) {
-		cidade = cidadeRepository.save(cidade);
-		return cidade;
+		Long estadoId = cidade.getEstado().getId();
+		Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
+		cidade.setEstado(estado);
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void remover(Long id) {
 		try {
 			cidadeRepository.deleteById(id);
 		}catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de Cidade com código %d", id));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
 		}
 		catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Cidade de código %d não pode ser removida, pois está em uso", id));
+			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, id));
 		}
 	}
 
+	public Cidade buscarOuFalhar(Long cidadeId) {
+		return cidadeRepository.findById(cidadeId).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+	}
 }
