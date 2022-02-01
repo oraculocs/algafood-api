@@ -44,12 +44,13 @@ public class Restaurante {
 	
 	//@NotNull
 	//@NotEmpty
-	@NotBlank(message = "Nome é obrigatório")
+	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
 	//@DecimalMin("1")
-	@PositiveOrZero
+	@NotNull
+	@PositiveOrZero(message = "{TaxaFrete.invalida}")
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
