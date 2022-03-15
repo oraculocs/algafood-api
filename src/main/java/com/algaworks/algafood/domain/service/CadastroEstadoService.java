@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -38,6 +39,7 @@ public class CadastroEstadoService {
 		return null;
 	}
 
+	@Transactional
 	public Estado salvar(Estado estado) {
 
 		Long estadoId = estado.getId();
@@ -46,6 +48,7 @@ public class CadastroEstadoService {
 		return estado;
 	}
 
+	@Transactional
 	public void excluir(Long id) {
 		try {
 			estadoRepository.deleteById(id);
