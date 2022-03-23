@@ -1,7 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +46,13 @@ public class Restaurante {
 	
 	//@NotNull
 	//@NotEmpty
-	@NotBlank
+	//@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
 	//@DecimalMin("1")
-	@NotNull
-	@PositiveOrZero
+	//@NotNull
+	//@PositiveOrZero
 	//@TaxaFrete
 	@Multiplo(numero = 5)
 	@Column(name = "taxa_frete", nullable = false)
@@ -61,9 +60,9 @@ public class Restaurante {
 
 	//@JsonIgnore
 	//@JsonIgnoreProperties("hibernateLazyInitializer")
-	@NotNull
-	@Valid
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+	//@NotNull
+	//@Valid
+	//@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
