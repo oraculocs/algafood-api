@@ -96,13 +96,16 @@ public class RestauranteController {
 
 	@PutMapping("/{restauranteId}")
 	public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
-		
-		Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-		Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro",
-				"produtos");
-
 		try {
+		//Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+		Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+		
+		restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+		
+//		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro",
+//				"produtos");
+
+		
 			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
 
 		} catch (CozinhaNaoEncontradaException e) {
